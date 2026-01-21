@@ -15,3 +15,4 @@ export { DebugPanel } from './DebugPanel.js';
 export { Modal } from './Modal.js';
 export { HelpModal } from './HelpModal.js';
 export { ProgressBar, SpinnerBar } from './ProgressBar.js';
+export { ErrorLogPanel, StandaloneErrorLogPanel, errorLog, useErrorLog, type ErrorEntry } from './ErrorLogPanel.js';

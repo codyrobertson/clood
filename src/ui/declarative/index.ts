@@ -4,6 +4,98 @@
  * Re-exports all declarative UI components for schema-driven rendering.
  */
 
+// Component Registry (UOW-0801)
+export {
+  ComponentRegistry,
+  createComponentRegistry,
+  useComponentRegistry,
+  registerComponent,
+  type BaseComponentProps,
+  type ComponentSpec,
+  type RegisteredComponent,
+  type FallbackComponentProps,
+  type RegisteredComponentMap,
+} from './ComponentRegistry.js';
+
+// Layout utilities (UOW-0803)
+export {
+  parseDimension,
+  calculateDimensionPx,
+  isFlexibleDimension,
+  isPercentageDimension,
+  isFixedDimension,
+  normalizeSpacing,
+  uniformSpacing,
+  symmetricSpacing,
+  spacingFromArray,
+  horizontalSpacing,
+  verticalSpacing,
+  addSpacing,
+  scaleSpacing,
+  spacingToInkPadding,
+  spacingToInkMargin,
+  normalizeGap,
+  toInkBorderStyle,
+  distributeSpace,
+  clampDimension,
+  DEFAULT_SPACING,
+  type ParsedDimension,
+  type GapProps,
+  type InkBorderStyle,
+} from './Layout.js';
+
+// Event Emitter (UOW-0830)
+export {
+  UIEventEmitter,
+  emitButtonClick,
+  emitListSelect,
+  emitListActivate,
+  emitListSelectionChange,
+  emitTableSelect,
+  emitTableActivate,
+  emitModalClose,
+  emitModalConfirm,
+  emitModalCancel,
+  initializeUIEventEmitter,
+  type UIEventType,
+  type UIEvent,
+  type ButtonClickUIEvent,
+  type ListSelectUIEvent,
+  type ListActivateUIEvent,
+  type ListSelectionChangeUIEvent,
+  type TableSelectUIEvent,
+  type TableActivateUIEvent,
+  type ModalCloseUIEvent,
+  type ModalConfirmUIEvent,
+  type ModalCancelUIEvent,
+  type UIEventListener,
+  type Unsubscribe,
+} from './EventEmitter.js';
+
+// Container components (UOW-0802)
+export {
+  Container,
+  Row,
+  Column,
+  Stack,
+  Inline,
+  Center,
+  Spacer,
+  Divider,
+  Card,
+  Grid,
+  type ContainerProps,
+  type RowProps,
+  type ColumnProps,
+  type StackProps,
+  type InlineProps,
+  type CenterProps,
+  type SpacerProps,
+  type DividerProps,
+  type CardProps,
+  type GridProps,
+} from './Container.js';
+
 // Basic components
 export { Button, ButtonRow, ActionButton, type ButtonProps, type ButtonRowProps, type ActionButtonProps } from './Button.js';
 export { List, SelectList, type ListItem, type ListProps, type SelectListProps } from './List.js';

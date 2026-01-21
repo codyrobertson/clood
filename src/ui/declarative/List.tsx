@@ -1,11 +1,13 @@
 /**
- * Declarative List Component (UOW-0803)
+ * Declarative List Component (UOW-0803, UOW-0831)
  *
  * Renders a list from declarative UILayout schema with selection support.
+ * Emits list.select and list.activate events for interactivity.
  */
 
 import React, { useMemo } from 'react';
 import { Box, Text, useInput } from 'ink';
+import { emitListSelect, emitListActivate, emitListSelectionChange } from './EventEmitter.js';
 
 export interface ListItem {
   id: string;
@@ -41,7 +43,7 @@ export interface ListProps {
 }
 
 export const List: React.FC<ListProps> = ({
-  id: _id,
+  id,
   items,
   selectedIndex = 0,
   selectedIds = [],
@@ -84,6 +86,8 @@ export const List: React.FC<ListProps> = ({
         const newIndex = Math.max(0, selectedIndex - 1);
         const newItem = items[newIndex];
         if (newIndex !== selectedIndex && newItem) {
+          // Emit list.select event
+          emitListSelect(id, newItem.id, newIndex, newItem.label, newItem.value);
           onSelect?.(newItem, newIndex);
         }
         return;
@@ -94,6 +98,8 @@ export const List: React.FC<ListProps> = ({
         const newIndex = Math.min(items.length - 1, selectedIndex + 1);
         const newItem = items[newIndex];
         if (newIndex !== selectedIndex && newItem) {
+          // Emit list.select event
+          emitListSelect(id, newItem.id, newIndex, newItem.label, newItem.value);
           onSelect?.(newItem, newIndex);
         }
         return;
@@ -103,6 +109,8 @@ export const List: React.FC<ListProps> = ({
       if (input === 'g') {
         const firstItem = items[0];
         if (firstItem) {
+          // Emit list.select event
+          emitListSelect(id, firstItem.id, 0, firstItem.label, firstItem.value);
           onSelect?.(firstItem, 0);
         }
         return;
@@ -113,6 +121,8 @@ export const List: React.FC<ListProps> = ({
         const lastIndex = items.length - 1;
         const lastItem = items[lastIndex];
         if (lastItem) {
+          // Emit list.select event
+          emitListSelect(id, lastItem.id, lastIndex, lastItem.label, lastItem.value);
           onSelect?.(lastItem, lastIndex);
         }
         return;
@@ -127,8 +137,12 @@ export const List: React.FC<ListProps> = ({
           const newSelectedIds = selectedIds.includes(item.id)
             ? selectedIds.filter((itemId) => itemId !== item.id)
             : [...selectedIds, item.id];
+          // Emit list.selectionChange event
+          emitListSelectionChange(id, newSelectedIds);
           onSelectionChange?.(newSelectedIds);
         } else {
+          // Emit list.activate event
+          emitListActivate(id, item.id, selectedIndex, item.label, item.value);
           onActivate?.(item, selectedIndex);
         }
       }

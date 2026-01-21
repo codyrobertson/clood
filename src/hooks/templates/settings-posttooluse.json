@@ -1,0 +1,112 @@
+{
+  "$schema": "https://claude.ai/hooks/schema/v1/posttooluse.json",
+  "name": "clood-result-renderer",
+  "description": "Post-tool-use hook that renders tool execution results into rich UILayout specifications",
+  "version": "1.0.0",
+  "type": "PostToolUse",
+  "enabled": true,
+  "config": {
+    "script": "./scripts/result-renderer.js",
+    "timeout": 5000,
+    "async": true
+  },
+  "matchers": [
+    {
+      "tool_name": "Bash",
+      "description": "Render bash command output with syntax highlighting",
+      "priority": 100,
+      "render": true,
+      "options": {
+        "max_output_lines": 100,
+        "syntax_highlight": true,
+        "show_exit_code": true
+      }
+    },
+    {
+      "tool_name": "Read",
+      "description": "Render file contents with language detection",
+      "priority": 90,
+      "render": true,
+      "options": {
+        "max_lines": 100,
+        "show_line_numbers": true,
+        "detect_language": true
+      }
+    },
+    {
+      "tool_name": "Glob",
+      "description": "Render file search results as interactive list",
+      "priority": 80,
+      "render": true,
+      "options": {
+        "max_files": 50,
+        "group_by_directory": false,
+        "show_file_icons": true
+      }
+    },
+    {
+      "tool_name": "Grep",
+      "description": "Render content search results with context",
+      "priority": 80,
+      "render": true,
+      "options": {
+        "max_matches": 50,
+        "show_context": true,
+        "highlight_matches": true
+      }
+    },
+    {
+      "tool_name": "TodoWrite",
+      "description": "Render todo list with progress indicators",
+      "priority": 70,
+      "render": true,
+      "options": {
+        "show_progress_bar": true,
+        "group_by_status": false
+      }
+    },
+    {
+      "tool_name": "WebFetch",
+      "description": "Render fetched web content",
+      "priority": 60,
+      "render": true,
+      "options": {
+        "max_content_length": 2000,
+        "render_markdown": true
+      }
+    },
+    {
+      "tool_name": "WebSearch",
+      "description": "Render web search results as list",
+      "priority": 60,
+      "render": true,
+      "options": {
+        "max_results": 10,
+        "show_snippets": true
+      }
+    }
+  ],
+  "options": {
+    "passthrough_on_error": true,
+    "log_errors": true,
+    "cache_results": false,
+    "render_timeout": 200,
+    "truncate_long_output": true,
+    "max_output_size": 10000
+  },
+  "ui_defaults": {
+    "border_style": "single",
+    "padding": {
+      "top": 1,
+      "bottom": 1,
+      "left": 2,
+      "right": 2
+    },
+    "colors": {
+      "success": "green",
+      "error": "red",
+      "output": "white",
+      "metadata": "gray"
+    }
+  }
+}

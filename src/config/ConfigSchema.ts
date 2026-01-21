@@ -1,8 +1,8 @@
 /**
- * Configuration Schema (UOW-1101, UOW-1102, UOW-1103)
+ * Configuration Schema (UOW-1101, UOW-1102, UOW-1103, UOW-1111, UOW-1121)
  *
  * Defines the application configuration structure including
- * themes, keybindings, and general settings.
+ * themes, keybindings, terminal capabilities, and general settings.
  */
 
 import { z } from 'zod';
@@ -139,25 +139,68 @@ export const PathsConfigSchema = z.object({
   cacheDir: z.string().optional(),
 });
 
+// Theme mode configuration (UOW-1111)
+export const ThemeModeSchema = z.enum(['auto', 'dark', 'light']);
+
+// Terminal capabilities configuration (UOW-1121)
+export const TerminalCapabilitiesConfigSchema = z.object({
+  // Graphics protocols
+  kittyGraphics: z.enum(['auto', 'enabled', 'disabled']).optional().default('auto'),
+  iTermImages: z.enum(['auto', 'enabled', 'disabled']).optional().default('auto'),
+  sixel: z.enum(['auto', 'enabled', 'disabled']).optional().default('auto'),
+
+  // Color support
+  trueColor: z.enum(['auto', 'enabled', 'disabled']).optional().default('auto'),
+  color256: z.enum(['auto', 'enabled', 'disabled']).optional().default('auto'),
+
+  // Unicode support
+  unicode: z.enum(['auto', 'enabled', 'disabled']).optional().default('auto'),
+
+  // Mouse support
+  mouse: z.enum(['auto', 'enabled', 'disabled']).optional().default('auto'),
+
+  // Clipboard support
+  clipboard: z.enum(['auto', 'enabled', 'disabled']).optional().default('auto'),
+});
+
+// Theme detection configuration (UOW-1111)
+export const ThemeDetectionConfigSchema = z.object({
+  mode: ThemeModeSchema.optional().default('auto'),
+
+  // Dark theme to use when dark mode is detected
+  darkTheme: z.string().optional(),
+
+  // Light theme to use when light mode is detected
+  lightTheme: z.string().optional(),
+
+  // Force specific background detection result
+  forceBackground: z.enum(['dark', 'light']).optional(),
+});
+
 // Main configuration schema
 export const ConfigSchema = z.object({
   version: z.string().optional(),
   theme: ThemeSchema.optional(),
+  themeDetection: ThemeDetectionConfigSchema.optional(),
   keybindings: KeybindingsConfigSchema.optional(),
   display: DisplayConfigSchema.optional(),
   behavior: BehaviorConfigSchema.optional(),
   paths: PathsConfigSchema.optional(),
+  terminal: TerminalCapabilitiesConfigSchema.optional(),
 });
 
 // TypeScript types
 export type Color = z.infer<typeof ColorSchema>;
 export type Theme = z.infer<typeof ThemeSchema>;
+export type ThemeMode = z.infer<typeof ThemeModeSchema>;
 export type Keybinding = z.infer<typeof KeybindingSchema>;
 export type KeybindingsConfig = z.infer<typeof KeybindingsConfigSchema>;
 export type PanelConfig = z.infer<typeof PanelConfigSchema>;
 export type DisplayConfig = z.infer<typeof DisplayConfigSchema>;
 export type BehaviorConfig = z.infer<typeof BehaviorConfigSchema>;
 export type PathsConfig = z.infer<typeof PathsConfigSchema>;
+export type TerminalCapabilitiesConfig = z.infer<typeof TerminalCapabilitiesConfigSchema>;
+export type ThemeDetectionConfig = z.infer<typeof ThemeDetectionConfigSchema>;
 export type Config = z.infer<typeof ConfigSchema>;
 
 // Default theme
@@ -200,10 +243,28 @@ export const defaultKeybindings: Keybinding[] = [
   { key: 'space', action: 'toggle', when: 'hasFocus' },
 ];
 
+// Default terminal capabilities
+export const defaultTerminalCapabilities: TerminalCapabilitiesConfig = {
+  kittyGraphics: 'auto',
+  iTermImages: 'auto',
+  sixel: 'auto',
+  trueColor: 'auto',
+  color256: 'auto',
+  unicode: 'auto',
+  mouse: 'auto',
+  clipboard: 'auto',
+};
+
+// Default theme detection
+export const defaultThemeDetection: ThemeDetectionConfig = {
+  mode: 'auto',
+};
+
 // Default configuration
 export const defaultConfig: Config = {
   version: '1.0',
   theme: defaultTheme,
+  themeDetection: defaultThemeDetection,
   keybindings: {
     bindings: defaultKeybindings,
     defaults: true,
@@ -234,6 +295,7 @@ export const defaultConfig: Config = {
     verbose: false,
     logLevel: 'info',
   },
+  terminal: defaultTerminalCapabilities,
 };
 
 /**
@@ -252,6 +314,9 @@ export function mergeConfig(partial: Partial<Config>): Config {
     ...defaultConfig,
     ...partial,
     theme: partial.theme ? { ...defaultTheme, ...partial.theme } : defaultConfig.theme,
+    themeDetection: partial.themeDetection
+      ? { ...defaultThemeDetection, ...partial.themeDetection }
+      : defaultConfig.themeDetection,
     display: partial.display ? { ...defaultConfig.display, ...partial.display } : defaultConfig.display,
     behavior: partial.behavior ? { ...defaultConfig.behavior, ...partial.behavior } : defaultConfig.behavior,
     keybindings: partial.keybindings
@@ -262,6 +327,9 @@ export function mergeConfig(partial: Partial<Config>): Config {
           defaults: partial.keybindings.defaults,
         }
       : defaultConfig.keybindings,
+    terminal: partial.terminal
+      ? { ...defaultTerminalCapabilities, ...partial.terminal }
+      : defaultConfig.terminal,
   };
 }
 

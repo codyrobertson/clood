@@ -1,0 +1,104 @@
+{
+  "$schema": "https://claude.ai/hooks/schema/v1/notification.json",
+  "name": "clood-notification-handler",
+  "description": "Notification hook that transforms notification events into rich UI components for terminal display",
+  "version": "1.0.0",
+  "type": "Notification",
+  "enabled": true,
+  "config": {
+    "script": "./scripts/notification-handler.js",
+    "timeout": 3000,
+    "async": true
+  },
+  "notification_types": {
+    "standard": {
+      "enabled": true,
+      "default_duration": 5000,
+      "dismissible": true,
+      "position": "top-right",
+      "max_visible": 3
+    },
+    "toast": {
+      "enabled": true,
+      "default_duration": 3000,
+      "dismissible": true,
+      "position": "bottom-right",
+      "max_visible": 5
+    },
+    "progress": {
+      "enabled": true,
+      "default_duration": 0,
+      "dismissible": false,
+      "position": "bottom",
+      "max_visible": 1,
+      "persist_until_complete": true
+    },
+    "task": {
+      "enabled": true,
+      "default_duration": 0,
+      "dismissible": true,
+      "position": "top-right",
+      "max_visible": 3,
+      "auto_dismiss_on_complete": true,
+      "auto_dismiss_delay": 3000
+    }
+  },
+  "level_styles": {
+    "info": {
+      "icon": "i",
+      "color": "blue",
+      "border_style": "single",
+      "sound": false
+    },
+    "success": {
+      "icon": "+",
+      "color": "green",
+      "border_style": "round",
+      "sound": false
+    },
+    "warning": {
+      "icon": "!",
+      "color": "yellow",
+      "border_style": "double",
+      "sound": false
+    },
+    "error": {
+      "icon": "x",
+      "color": "red",
+      "border_style": "bold",
+      "sound": false
+    }
+  },
+  "options": {
+    "passthrough_on_error": true,
+    "log_errors": true,
+    "queue_notifications": true,
+    "max_queue_size": 10,
+    "deduplicate": true,
+    "deduplicate_window_ms": 1000
+  },
+  "ui_defaults": {
+    "width": 60,
+    "padding": {
+      "top": 1,
+      "bottom": 1,
+      "left": 2,
+      "right": 2
+    },
+    "animation": {
+      "show": "fade-in",
+      "hide": "fade-out",
+      "duration_ms": 200
+    }
+  },
+  "actions": {
+    "on_click": "focus",
+    "on_dismiss": "remove",
+    "keyboard_shortcuts": {
+      "dismiss": "Escape",
+      "dismiss_all": "Ctrl+Shift+Escape",
+      "focus_next": "Tab",
+      "focus_prev": "Shift+Tab"
+    }
+  }
+}

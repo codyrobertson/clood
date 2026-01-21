@@ -1,0 +1,85 @@
+{
+  "$schema": "https://claude.ai/hooks/schema/v1/pretooluse.json",
+  "name": "clood-ui-interceptor",
+  "description": "Pre-tool-use hook that intercepts tool calls and transforms them into rich UILayout specifications for terminal rendering",
+  "version": "1.0.0",
+  "type": "PreToolUse",
+  "enabled": true,
+  "config": {
+    "script": "./scripts/ui-interceptor.js",
+    "timeout": 5000,
+    "async": false
+  },
+  "matchers": [
+    {
+      "tool_name": "AskUserQuestion",
+      "description": "Transform user questions into interactive UI prompts",
+      "priority": 100,
+      "transform": true
+    },
+    {
+      "tool_name": "TodoWrite",
+      "description": "Transform todo list updates into table displays",
+      "priority": 90,
+      "transform": true
+    },
+    {
+      "tool_name": "Read",
+      "description": "Transform file read operations into preview UI",
+      "priority": 80,
+      "transform": true
+    },
+    {
+      "tool_name": "Write",
+      "description": "Transform file write operations into confirmation UI",
+      "priority": 80,
+      "transform": true
+    },
+    {
+      "tool_name": "Edit",
+      "description": "Transform edit operations into diff view UI",
+      "priority": 85,
+      "transform": true
+    },
+    {
+      "tool_name": "Bash",
+      "description": "Transform bash commands into execution UI with progress",
+      "priority": 70,
+      "transform": true
+    },
+    {
+      "tool_name": "Glob",
+      "description": "Transform glob searches into file list UI",
+      "priority": 60,
+      "transform": false
+    },
+    {
+      "tool_name": "Grep",
+      "description": "Transform grep searches into results UI",
+      "priority": 60,
+      "transform": false
+    }
+  ],
+  "options": {
+    "passthrough_on_error": true,
+    "log_errors": true,
+    "cache_transforms": false,
+    "render_timeout": 100
+  },
+  "ui_defaults": {
+    "border_style": "single",
+    "padding": {
+      "top": 1,
+      "bottom": 1,
+      "left": 2,
+      "right": 2
+    },
+    "colors": {
+      "primary": "cyan",
+      "secondary": "gray",
+      "success": "green",
+      "warning": "yellow",
+      "error": "red"
+    }
+  }
+}

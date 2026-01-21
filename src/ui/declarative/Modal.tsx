@@ -1,13 +1,17 @@
 /**
- * Declarative Modal Component (UOW-0805)
+ * Declarative Modal Component (UOW-0805, UOW-0833)
  *
  * Renders a modal dialog with focus trapping.
+ * Emits modal.close, modal.confirm, and modal.cancel events for interactivity.
  */
 
 import React, { useEffect } from 'react';
 import { Box, Text, useInput } from 'ink';
+import { emitModalClose, emitModalConfirm, emitModalCancel } from './EventEmitter.js';
 
 export interface ModalProps {
+  /** Unique modal ID for events */
+  id?: string;
   /** Whether modal is visible */
   visible: boolean;
   /** Modal title */
@@ -34,6 +38,7 @@ const BORDER_STYLES = {
 };
 
 export const Modal: React.FC<ModalProps> = ({
+  id = 'modal',
   visible,
   title,
   children,
@@ -47,6 +52,8 @@ export const Modal: React.FC<ModalProps> = ({
   useInput(
     (input, key) => {
       if (key.escape || input === 'q') {
+        // Emit modal.close event
+        emitModalClose(id, 'escape');
         onClose?.();
       }
     },
@@ -115,6 +122,8 @@ export const Modal: React.FC<ModalProps> = ({
  * Confirmation dialog modal
  */
 export interface ConfirmModalProps {
+  /** Unique modal ID for events */
+  id?: string;
   visible: boolean;
   title?: string;
   message: string;
@@ -125,6 +134,7 @@ export interface ConfirmModalProps {
 }
 
 export const ConfirmModal: React.FC<ConfirmModalProps> = ({
+  id = 'confirm-modal',
   visible,
   title = 'Confirm',
   message,
@@ -143,13 +153,21 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
         setSelected('cancel');
       } else if (key.return) {
         if (selected === 'confirm') {
+          // Emit modal.confirm event
+          emitModalConfirm(id);
           onConfirm?.();
         } else {
+          // Emit modal.cancel event
+          emitModalCancel(id);
           onCancel?.();
         }
       } else if (key.escape || input === 'n') {
+        // Emit modal.cancel event
+        emitModalCancel(id);
         onCancel?.();
       } else if (input === 'y') {
+        // Emit modal.confirm event
+        emitModalConfirm(id);
         onConfirm?.();
       }
     },
@@ -159,7 +177,7 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
   if (!visible) return null;
 
   return (
-    <Modal visible={visible} title={title} onClose={onCancel} showCloseHint={false}>
+    <Modal id={id} visible={visible} title={title} onClose={onCancel} showCloseHint={false}>
       <Box flexDirection="column">
         <Box marginBottom={1}>
           <Text>{message}</Text>
@@ -194,6 +212,8 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
  * Alert modal (info/warning/error)
  */
 export interface AlertModalProps {
+  /** Unique modal ID for events */
+  id?: string;
   visible: boolean;
   type?: 'info' | 'warning' | 'error' | 'success';
   title?: string;
@@ -216,6 +236,7 @@ const ALERT_COLORS = {
 } as const;
 
 export const AlertModal: React.FC<AlertModalProps> = ({
+  id = 'alert-modal',
   visible,
   type = 'info',
   title,
@@ -229,7 +250,7 @@ export const AlertModal: React.FC<AlertModalProps> = ({
   const defaultTitle = type.charAt(0).toUpperCase() + type.slice(1);
 
   return (
-    <Modal visible={visible} title={title || defaultTitle} onClose={onDismiss}>
+    <Modal id={id} visible={visible} title={title || defaultTitle} onClose={onDismiss}>
       <Box>
         <Text color={color}>{icon} </Text>
         <Text>{message}</Text>

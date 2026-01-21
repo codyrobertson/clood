@@ -1,11 +1,13 @@
 /**
- * Declarative Button Component (UOW-0802)
+ * Declarative Button Component (UOW-0802, UOW-0830)
  *
  * Renders a button from declarative UILayout schema.
+ * Emits button.click events when activated.
  */
 
 import React from 'react';
 import { Box, Text, useInput } from 'ink';
+import { emitButtonClick } from './EventEmitter.js';
 
 export interface ButtonProps {
   /** Button ID for events */
@@ -38,6 +40,8 @@ export const Button: React.FC<ButtonProps> = ({
     (input, key) => {
       if (disabled) return;
       if (key.return || input === ' ') {
+        // Emit button.click event
+        emitButtonClick(id, id, label);
         onPress?.(id);
       }
     },
@@ -123,6 +127,8 @@ export const ActionButton: React.FC<ActionButtonProps> = ({
     (input, key) => {
       if (disabled) return;
       if (key.return || input === ' ') {
+        // Emit button.click event
+        emitButtonClick(id, id, label);
         onPress?.(id);
       }
     },

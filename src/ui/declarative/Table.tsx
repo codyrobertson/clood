@@ -1,11 +1,13 @@
 /**
- * Declarative Table Component (UOW-0804)
+ * Declarative Table Component (UOW-0804, UOW-0832)
  *
  * Renders a table from declarative UILayout schema.
+ * Emits table.select and table.activate events for interactivity.
  */
 
 import React, { useMemo } from 'react';
 import { Box, Text, useInput } from 'ink';
+import { emitTableSelect, emitTableActivate } from './EventEmitter.js';
 
 export interface TableColumn {
   id: string;
@@ -58,7 +60,7 @@ const BORDER_CHARS: Record<'none' | 'single' | 'ascii', BorderChars> = {
 };
 
 export const Table: React.FC<TableProps> = ({
-  id: _id,
+  id,
   columns,
   rows,
   selectedRowIndex = -1,
@@ -93,6 +95,8 @@ export const Table: React.FC<TableProps> = ({
         const newIndex = Math.max(0, selectedRowIndex - 1);
         const newRow = rows[newIndex];
         if (newIndex !== selectedRowIndex && newRow) {
+          // Emit table.select event
+          emitTableSelect(id, newIndex, newRow);
           onRowSelect?.(newRow, newIndex);
         }
         return;
@@ -102,6 +106,8 @@ export const Table: React.FC<TableProps> = ({
         const newIndex = Math.min(rows.length - 1, selectedRowIndex + 1);
         const newRow = rows[newIndex];
         if (newIndex !== selectedRowIndex && newRow) {
+          // Emit table.select event
+          emitTableSelect(id, newIndex, newRow);
           onRowSelect?.(newRow, newIndex);
         }
         return;
@@ -110,6 +116,8 @@ export const Table: React.FC<TableProps> = ({
       if (input === 'g') {
         const firstRow = rows[0];
         if (firstRow) {
+          // Emit table.select event
+          emitTableSelect(id, 0, firstRow);
           onRowSelect?.(firstRow, 0);
         }
         return;
@@ -119,6 +127,8 @@ export const Table: React.FC<TableProps> = ({
         const lastIndex = rows.length - 1;
         const lastRow = rows[lastIndex];
         if (lastRow) {
+          // Emit table.select event
+          emitTableSelect(id, lastIndex, lastRow);
           onRowSelect?.(lastRow, lastIndex);
         }
         return;
@@ -127,6 +137,8 @@ export const Table: React.FC<TableProps> = ({
       if (key.return) {
         const selectedRow = rows[selectedRowIndex];
         if (selectedRowIndex >= 0 && selectedRowIndex < rows.length && selectedRow) {
+          // Emit table.activate event
+          emitTableActivate(id, selectedRowIndex, selectedRow);
           onRowActivate?.(selectedRow, selectedRowIndex);
         }
       }

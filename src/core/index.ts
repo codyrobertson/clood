@@ -21,3 +21,17 @@ export {
 } from './EventStream.js';
 
 export { useEventStream } from './useEventStream.js';
+
+// Metrics
+export {
+  AdvancedMetricsCollector,
+  metricsCollector,
+  getMetrics,
+  getStatusBarMetrics,
+  recordEvent,
+  recordRender,
+  recordError,
+  resetMetrics,
+  type MetricsSnapshot,
+  type MetricsCollectorOptions,
+} from './MetricsCollector.js';
