@@ -32,6 +32,8 @@ export const UIEventTypeSchema = z.enum([
 
   // Task events
   'task_action',
+  'task.cancel',
+  'task.retry',
   'modal_action',
   'document_action',
   'notification_action',
@@ -174,6 +176,30 @@ export const UpdateStatePayloadSchema = z.object({
   operation: z.enum(['set', 'merge', 'delete']).optional().default('set'),
 });
 
+/**
+ * Task control event payload schemas (UOW-0609)
+ */
+
+// Task cancel payload
+export const TaskCancelPayloadSchema = z.object({
+  taskId: z.string(),
+  reason: z.string().optional(),
+  force: z.boolean().optional().default(false),
+});
+
+// Task retry payload
+export const TaskRetryPayloadSchema = z.object({
+  taskId: z.string(),
+  resetState: z.boolean().optional().default(false),
+});
+
+// Generic task control payload
+export const TaskControlPayloadSchema = z.object({
+  taskId: z.string(),
+  action: z.enum(['cancel', 'retry', 'pause', 'resume', 'view']),
+  data: z.record(z.unknown()).optional(),
+});
+
 export type UserInputPayload = z.infer<typeof UserInputPayloadSchema>;
 export type ButtonClickPayload = z.infer<typeof ButtonClickPayloadSchema>;
 export type SelectionChangePayload = z.infer<typeof SelectionChangePayloadSchema>;
@@ -187,6 +213,9 @@ export type MetricsPayload = z.infer<typeof MetricsPayloadSchema>;
 export type NavigatePayload = z.infer<typeof NavigatePayloadSchema>;
 export type DismissPayload = z.infer<typeof DismissPayloadSchema>;
 export type UpdateStatePayload = z.infer<typeof UpdateStatePayloadSchema>;
+export type TaskCancelPayload = z.infer<typeof TaskCancelPayloadSchema>;
+export type TaskRetryPayload = z.infer<typeof TaskRetryPayloadSchema>;
+export type TaskControlPayload = z.infer<typeof TaskControlPayloadSchema>;
 
 /**
  * Validate a UIEvent
@@ -305,6 +334,21 @@ export const UIEvents = {
 
   custom(actionName: string, payload: Record<string, unknown>, componentId?: string): UIEvent {
     return createUIEvent('action.custom', { actionName, ...payload }, { componentId });
+  },
+
+  /**
+   * Task control events (UOW-0609)
+   */
+  taskCancel(taskId: string, reason?: string, force?: boolean): UIEvent {
+    return createUIEvent('task.cancel', { taskId, reason, force: force ?? false });
+  },
+
+  taskRetry(taskId: string, resetState?: boolean): UIEvent {
+    return createUIEvent('task.retry', { taskId, resetState: resetState ?? false });
+  },
+
+  taskAction(taskId: string, action: 'cancel' | 'retry' | 'pause' | 'resume' | 'view', data?: Record<string, unknown>): UIEvent {
+    return createUIEvent('task_action', { taskId, action, data });
   },
 };
 

@@ -16,3 +16,11 @@ export { Modal } from './Modal.js';
 export { HelpModal } from './HelpModal.js';
 export { ProgressBar, SpinnerBar } from './ProgressBar.js';
 export { ErrorLogPanel, StandaloneErrorLogPanel, errorLog, useErrorLog, type ErrorEntry } from './ErrorLogPanel.js';
+export {
+  HistoryView,
+  StandaloneHistoryView,
+  exportHistoryToMarkdown,
+  exportHistoryToText,
+  type HistoryViewProps,
+  type StandaloneHistoryViewProps,
+} from './HistoryView.js';

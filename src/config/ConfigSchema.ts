@@ -139,6 +139,29 @@ export const PathsConfigSchema = z.object({
   cacheDir: z.string().optional(),
 });
 
+// Performance configuration (UOW-0307)
+export const PerformanceConfigSchema = z.object({
+  // Frame rate settings
+  maxFrameRate: z.number().min(15).max(120).optional().default(60),
+  minFrameRate: z.number().min(10).max(60).optional().default(30),
+
+  // Rendering optimization
+  incrementalRendering: z.boolean().optional().default(true),
+  incrementalBatchSize: z.number().min(10).max(500).optional().default(100),
+
+  // Adaptive performance
+  adaptiveFrameRate: z.boolean().optional().default(true),
+  loadThreshold: z.number().min(10).max(1000).optional().default(100),
+
+  // Event batching
+  eventBatchSize: z.number().min(10).max(10000).optional().default(1000),
+  eventCoalescing: z.boolean().optional().default(true),
+
+  // Memory management
+  maxEventBufferSize: z.number().min(100).max(100000).optional().default(10000),
+  gcInterval: z.number().min(1000).max(60000).optional().default(5000),
+});
+
 // Theme mode configuration (UOW-1111)
 export const ThemeModeSchema = z.enum(['auto', 'dark', 'light']);
 
@@ -187,6 +210,7 @@ export const ConfigSchema = z.object({
   behavior: BehaviorConfigSchema.optional(),
   paths: PathsConfigSchema.optional(),
   terminal: TerminalCapabilitiesConfigSchema.optional(),
+  performance: PerformanceConfigSchema.optional(),
 });
 
 // TypeScript types
@@ -201,6 +225,7 @@ export type BehaviorConfig = z.infer<typeof BehaviorConfigSchema>;
 export type PathsConfig = z.infer<typeof PathsConfigSchema>;
 export type TerminalCapabilitiesConfig = z.infer<typeof TerminalCapabilitiesConfigSchema>;
 export type ThemeDetectionConfig = z.infer<typeof ThemeDetectionConfigSchema>;
+export type PerformanceConfig = z.infer<typeof PerformanceConfigSchema>;
 export type Config = z.infer<typeof ConfigSchema>;
 
 // Default theme
@@ -260,6 +285,20 @@ export const defaultThemeDetection: ThemeDetectionConfig = {
   mode: 'auto',
 };
 
+// Default performance configuration (UOW-0307)
+export const defaultPerformanceConfig: PerformanceConfig = {
+  maxFrameRate: 60,
+  minFrameRate: 30,
+  incrementalRendering: true,
+  incrementalBatchSize: 100,
+  adaptiveFrameRate: true,
+  loadThreshold: 100,
+  eventBatchSize: 1000,
+  eventCoalescing: true,
+  maxEventBufferSize: 10000,
+  gcInterval: 5000,
+};
+
 // Default configuration
 export const defaultConfig: Config = {
   version: '1.0',
@@ -296,6 +335,7 @@ export const defaultConfig: Config = {
     logLevel: 'info',
   },
   terminal: defaultTerminalCapabilities,
+  performance: defaultPerformanceConfig,
 };
 
 /**
@@ -330,6 +370,9 @@ export function mergeConfig(partial: Partial<Config>): Config {
     terminal: partial.terminal
       ? { ...defaultTerminalCapabilities, ...partial.terminal }
       : defaultConfig.terminal,
+    performance: partial.performance
+      ? { ...defaultPerformanceConfig, ...partial.performance }
+      : defaultConfig.performance,
   };
 }
 

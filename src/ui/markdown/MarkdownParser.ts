@@ -5,6 +5,49 @@
  * Supports: headers, bold, italic, code, lists, links, blockquotes.
  */
 
+/**
+ * Interface for markdown renderers.
+ * Allows different output formats (ANSI, plain text, React components, etc.)
+ */
+export interface IMarkdownRenderer {
+  /** Render a complete AST to the target format */
+  render(nodes: MarkdownNode[]): string;
+  /** Render a single node */
+  renderNode(node: MarkdownNode): string;
+  /** Configuration options for the renderer */
+  options?: MarkdownRenderOptions;
+}
+
+/**
+ * Options for markdown rendering
+ */
+export interface MarkdownRenderOptions {
+  /** Maximum width for text wrapping */
+  width?: number;
+  /** Whether to use ANSI colors */
+  useColors?: boolean;
+  /** Whether to preserve code block whitespace exactly */
+  preserveCodeWhitespace?: boolean;
+  /** Whether to enable syntax highlighting for code blocks */
+  syntaxHighlight?: boolean;
+  /** Tab size for code blocks */
+  tabSize?: number;
+  /** Show borders around code blocks */
+  codeBlockBorder?: boolean;
+  /** Show language label on code blocks */
+  showLanguageLabel?: boolean;
+}
+
+export const DEFAULT_RENDER_OPTIONS: MarkdownRenderOptions = {
+  width: 80,
+  useColors: true,
+  preserveCodeWhitespace: true,
+  syntaxHighlight: true,
+  tabSize: 2,
+  codeBlockBorder: true,
+  showLanguageLabel: true,
+};
+
 export type MarkdownNodeType =
   | 'text'
   | 'paragraph'

@@ -26,7 +26,17 @@ export type UIEventType =
   | 'accordion.toggle'
   | 'tree.select'
   | 'tree.expand'
-  | 'tree.collapse';
+  | 'tree.collapse'
+  // EPIC 8 Advanced components (UOW-0816, UOW-0817, UOW-0818, UOW-0819)
+  | 'pane.resize'
+  | 'pane.focus'
+  | 'log.filter'
+  | 'log.scroll'
+  | 'diff.navigate'
+  | 'diff.select'
+  | 'file.select'
+  | 'file.navigate'
+  | 'file.filter';
 
 /**
  * Base UI event interface

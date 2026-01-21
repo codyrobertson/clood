@@ -97,9 +97,82 @@ export {
 } from './Container.js';
 
 // Basic components
-export { Button, ButtonRow, ActionButton, type ButtonProps, type ButtonRowProps, type ActionButtonProps } from './Button.js';
-export { List, SelectList, type ListItem, type ListProps, type SelectListProps } from './List.js';
-export { Table, SimpleTable, type TableColumn, type TableProps, type SimpleTableProps } from './Table.js';
+export { Button, ActionButton, type ButtonProps, type ActionButtonProps } from './Button.js';
+
+// ButtonRow (UOW-0812) - Enhanced with full interactivity
+export {
+  ButtonRow,
+  QuickActions,
+  ConfirmCancel,
+  YesNo,
+  Toolbar,
+  type ButtonConfig,
+  type ButtonRowProps,
+  type ButtonVariant,
+  type ButtonSize,
+  type QuickActionsProps,
+  type ConfirmCancelProps,
+  type YesNoProps,
+  type ToolbarProps,
+} from './ButtonRow.js';
+
+// List (UOW-0813) - Enhanced with keyboard navigation, multi-select, visual indicators
+export {
+  List,
+  SelectList,
+  CheckboxList,
+  MenuList,
+  FileList,
+  SearchableList,
+  type ListItem,
+  type ListItemVariant,
+  type ListProps,
+  type SelectListProps,
+  type CheckboxListProps,
+  type MenuListProps,
+  type FileListProps,
+  type SearchableListProps,
+} from './List.js';
+
+// Table (UOW-0814) - Enhanced with row selection, sorting indicators, responsive columns
+export {
+  Table,
+  SimpleTable,
+  SortableTable,
+  DataGrid,
+  KeyValueTable,
+  type TableColumn,
+  type TableProps,
+  type SimpleTableProps,
+  type SortableTableProps,
+  type DataGridProps,
+  type KeyValueTableProps,
+  type SortDirection,
+  type ColumnAlign,
+} from './Table.js';
+
+// TextBlock (UOW-0810) - ANSI-safe, Unicode-aware text rendering
+export {
+  TextBlock,
+  SimpleText,
+  CodeBlock,
+  Paragraph,
+  Label,
+  Highlight,
+  getVisualWidth,
+  truncateText,
+  padText,
+  wrapText,
+  type TextBlockProps,
+  type SimpleTextProps,
+  type CodeBlockProps,
+  type ParagraphProps,
+  type LabelProps,
+  type HighlightProps,
+  type TextAlign,
+  type TextStyle,
+  type TextColor,
+} from './TextBlock.js';
 
 // Modals and dialogs
 export { Modal, ConfirmModal, AlertModal, LoadingModal, type ModalProps, type ConfirmModalProps, type AlertModalProps, type LoadingModalProps } from './Modal.js';
@@ -124,3 +197,81 @@ export { BarChart, Sparkline, LineChart, PieChart, GaugeChart, Histogram, type B
 // Hierarchical components
 export { TreeView, FileTree, ExpandableList, type TreeNode, type TreeViewProps, type FileTreeNode, type FileTreeProps, type ExpandableListProps } from './TreeView.js';
 export { Accordion, Collapsible, Details, StepAccordion, type AccordionItem, type AccordionProps, type CollapsibleProps, type DetailsProps, type StepAccordionProps } from './Accordion.js';
+
+// EPIC 8 Advanced declarative components (UOW-0816, UOW-0817, UOW-0818, UOW-0819)
+// SplitView (UOW-0816)
+export {
+  SplitView,
+  LeftRightSplit,
+  TopBottomSplit,
+  ThreePaneSplit,
+  emitPaneResize,
+  emitPaneFocus,
+  type SplitViewProps,
+  type LeftRightSplitProps,
+  type TopBottomSplitProps,
+  type ThreePaneSplitProps,
+  type PaneResizeUIEvent,
+  type PaneFocusUIEvent,
+} from './SplitView.js';
+
+// Logs (UOW-0817)
+export {
+  Logs,
+  SimpleLogs,
+  LogStream,
+  createLogEntries,
+  emitLogFilter,
+  emitLogScroll,
+  type LogLevel,
+  type LogEntry,
+  type LogsProps,
+  type SimpleLogsProps,
+  type LogStreamProps,
+  type LogFilterUIEvent,
+  type LogScrollUIEvent,
+} from './Logs.js';
+
+// DiffView (UOW-0818)
+export {
+  DiffView,
+  SimpleDiffView,
+  SideBySideDiff,
+  parseUnifiedDiff,
+  emitDiffNavigate,
+  emitDiffSelect,
+  type DiffLineType,
+  type DiffLine,
+  type DiffHunk,
+  type DiffFile,
+  type DiffViewProps,
+  type SimpleDiffViewProps,
+  type SideBySideDiffProps,
+  type DiffNavigateUIEvent,
+  type DiffSelectUIEvent,
+} from './DiffView.js';
+
+// FilePicker (UOW-0819)
+export {
+  FilePicker,
+  SimpleFilePicker,
+  DirectoryPicker,
+  createFileEntries,
+  emitFileSelect,
+  emitFileNavigate,
+  emitFileFilter,
+  type FileEntry,
+  type FilePickerProps,
+  type SimpleFilePickerProps,
+  type DirectoryPickerProps,
+  type FileSelectUIEvent,
+  type FileNavigateUIEvent,
+  type FileFilterUIEvent,
+} from './FilePicker.js';
+
+// EPIC 8 Component Registration
+export {
+  registerEpic8Components,
+  isEpic8Registered,
+  getEpic8ComponentTypes,
+} from './registerEpic8Components.js';

@@ -2,10 +2,20 @@
  * Keyboard Navigation Hook
  *
  * Handles all keyboard shortcuts and navigation within the TUI.
+ * Includes support for diagram viewing with 'd' keybinding.
  */
 
 import { useInput } from 'ink';
+import { useMemo } from 'react';
 import { useStore } from '../../store/index.js';
+import { detectDiagrams, type DiagramBlock } from '../charts/DiagramDetector.js';
+
+/** Represents a detected diagram in a message */
+interface MessageDiagram {
+  messageId: string;
+  diagram: DiagramBlock;
+  index: number;
+}
 
 export function useKeyboardNavigation(): void {
   const viewMode = useStore((s) => s.viewMode);
@@ -19,6 +29,34 @@ export function useKeyboardNavigation(): void {
   const currentDocument = useStore((s) => s.currentDocument);
   const updateConfig = useStore((s) => s.updateConfig);
   const config = useStore((s) => s.config);
+  const openDocument = useStore((s) => s.openDocument);
+
+  // Detect diagrams in messages for 'd' keybinding
+  const messageDiagrams = useMemo((): MessageDiagram[] => {
+    if (!config.enableDiagramDetection) {
+      return [];
+    }
+
+    const diagrams: MessageDiagram[] = [];
+    let globalIndex = 0;
+
+    for (const message of messages) {
+      const detected = detectDiagrams(message.content, {
+        minConfidence: 0.6,
+        minLines: 3,
+      });
+
+      for (const diagram of detected) {
+        diagrams.push({
+          messageId: message.id,
+          diagram,
+          index: globalIndex++,
+        });
+      }
+    }
+
+    return diagrams;
+  }, [messages, config.enableDiagramDetection]);
 
   useInput((input, key) => {
     // Toggle tasks panel with 't'
@@ -30,6 +68,25 @@ export function useKeyboardNavigation(): void {
     // Toggle auto-scroll with 'a'
     if (input === 'a' || input === 'A') {
       updateConfig({ autoScroll: !config.autoScroll });
+      return;
+    }
+
+    // Open diagram viewer with 'd' (UOW-0702)
+    if ((input === 'd' || input === 'D') && viewMode === 'normal') {
+      if (messageDiagrams.length > 0) {
+        // Open the most recent diagram (last one detected)
+        const latestDiagram = messageDiagrams[messageDiagrams.length - 1];
+        if (latestDiagram) {
+          const title = latestDiagram.diagram.title ?? `${latestDiagram.diagram.type} diagram`;
+          openDocument({
+            path: `diagram-${latestDiagram.messageId}-${latestDiagram.index}`,
+            title: title,
+            content: latestDiagram.diagram.content,
+            language: 'diagram',
+            lineCount: latestDiagram.diagram.lines.length,
+          });
+        }
+      }
       return;
     }
 

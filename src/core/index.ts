@@ -35,3 +35,30 @@ export {
   type MetricsSnapshot,
   type MetricsCollectorOptions,
 } from './MetricsCollector.js';
+
+// Render Throttler (UOW-0305)
+export {
+  RenderThrottler,
+  createRenderThrottler,
+  getRenderThrottler,
+  resetRenderThrottler,
+  requestRenderFrame,
+  flushRenderFrames,
+  type RenderThrottlerConfig,
+  type RenderStats,
+  type FrameCallback,
+} from './RenderThrottler.js';
+
+// Event Batcher (UOW-0306)
+export {
+  EventBatcher,
+  StateUpdateBatcher,
+  createEventBatcher,
+  createStateUpdateBatcher,
+  getEventBatcher,
+  resetEventBatcher,
+  type EventBatcherConfig,
+  type BatchedEvent,
+  type BatchStats,
+  type BatchFlushHandler,
+} from './EventBatcher.js';
