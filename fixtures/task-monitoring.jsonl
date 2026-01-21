@@ -1,0 +1,16 @@
+{"type":"session","action":"start","sessionId":"session-002"}
+{"type":"message","id":"msg-001","role":"user","content":"Please run the test suite","timestamp":"2026-01-21T11:00:00Z"}
+{"type":"message","id":"msg-002","role":"assistant","content":"I'll run the test suite for you. Starting now...","timestamp":"2026-01-21T11:00:02Z"}
+{"type":"task","id":"task-001","command":"npm test","description":"Running test suite","status":"started"}
+{"type":"task","id":"task-002","command":"npm run lint","description":"Running linter","status":"started"}
+{"type":"task","id":"task-002","status":"completed","exitCode":0}
+{"type":"notify","level":"success","message":"Linting passed!"}
+{"type":"task","id":"task-001","status":"running","output":"Running 45 tests..."}
+{"type":"task","id":"task-001","status":"completed","exitCode":0}
+{"type":"notify","level":"success","message":"All 45 tests passed!"}
+{"type":"message","id":"msg-003","role":"assistant","content":"All tests have passed! The test suite completed successfully with 45 passing tests.","timestamp":"2026-01-21T11:00:30Z"}
+{"type":"task","id":"task-003","command":"npm run build","description":"Building project","status":"started"}
+{"type":"task","id":"task-003","status":"failed","exitCode":1,"error":"TypeScript compilation error"}
+{"type":"notify","level":"error","message":"Build failed - TypeScript error"}
+{"type":"message","id":"msg-004","role":"assistant","content":"The build failed due to a TypeScript error. Let me investigate.","timestamp":"2026-01-21T11:01:00Z"}
+{"type":"session","action":"end","sessionId":"session-002"}

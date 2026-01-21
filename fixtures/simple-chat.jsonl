@@ -1,0 +1,14 @@
+{"type":"session","action":"start","sessionId":"session-001"}
+{"type":"message","id":"msg-001","role":"user","content":"Hello, Claude! Can you help me understand this codebase?","timestamp":"2026-01-21T10:00:00Z"}
+{"type":"stream","messageId":"msg-002","content":"Of course! ","done":false}
+{"type":"stream","messageId":"msg-002","content":"I'd be happy to help you understand this codebase. ","done":false}
+{"type":"stream","messageId":"msg-002","content":"Let me start by exploring the project structure.","done":true}
+{"type":"message","id":"msg-002","role":"assistant","content":"Of course! I'd be happy to help you understand this codebase. Let me start by exploring the project structure.","timestamp":"2026-01-21T10:00:05Z"}
+{"type":"task","id":"task-001","command":"find . -type f -name '*.ts'","description":"Finding TypeScript files","status":"started"}
+{"type":"task","id":"task-001","status":"completed","exitCode":0}
+{"type":"message","id":"msg-003","role":"user","content":"Can you show me the main entry point?","timestamp":"2026-01-21T10:01:00Z"}
+{"type":"document","action":"open","path":"src/index.tsx","title":"Main Entry Point","content":"#!/usr/bin/env node\nimport { render } from 'ink';\nimport { App } from './ui/App.js';\n\nconst { waitUntilExit } = render(<App />);\nawait waitUntilExit();","language":"typescript"}
+{"type":"message","id":"msg-004","role":"assistant","content":"Here's the main entry point. It uses Ink (React for CLI) to render the application.","timestamp":"2026-01-21T10:01:10Z"}
+{"type":"document","action":"close"}
+{"type":"notify","level":"success","message":"Analysis complete!"}
+{"type":"session","action":"end","sessionId":"session-001"}
