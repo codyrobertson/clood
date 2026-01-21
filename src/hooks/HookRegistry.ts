@@ -135,7 +135,7 @@ export class HookRegistry {
    * Unregister a hook by ID
    */
   unregister(id: string): boolean {
-    for (const [name, hooks] of this.hooks) {
+    for (const [_name, hooks] of this.hooks) {
       const index = hooks.findIndex((h) => h.id === id);
       if (index !== -1) {
         hooks.splice(index, 1);

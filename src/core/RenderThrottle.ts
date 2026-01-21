@@ -51,7 +51,7 @@ export function throttle<T extends (...args: unknown[]) => unknown>(
     fn(...args);
   };
 
-  const scheduleTrailing = (args: unknown[], delay: number) => {
+  const scheduleTrailing = (_args: unknown[], delay: number) => {
     if (state.timerId) {
       clearTimeout(state.timerId);
     }

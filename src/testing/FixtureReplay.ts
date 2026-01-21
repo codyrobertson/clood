@@ -97,7 +97,7 @@ export async function replayFixture(
   let skippedEvents = 0;
 
   for (let i = 0; i < lines.length; i++) {
-    const line = lines[i].trim();
+    const line = (lines[i] ?? '').trim();
     if (line.length === 0) continue;
 
     const event = parseEvent(line);

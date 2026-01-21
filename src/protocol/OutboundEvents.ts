@@ -238,8 +238,6 @@ export function createBufferedEmitter(
   const maxBuffer = options.maxBuffer ?? 100;
   const flushInterval = options.flushInterval ?? 100;
 
-  let flushTimer: ReturnType<typeof setInterval> | null = null;
-
   const flush = () => {
     while (buffer.length > 0) {
       const event = buffer.shift()!;
@@ -248,7 +246,7 @@ export function createBufferedEmitter(
   };
 
   if (flushInterval > 0) {
-    flushTimer = setInterval(flush, flushInterval);
+    setInterval(flush, flushInterval);
   }
 
   return {

@@ -83,7 +83,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
 
 interface ErrorDisplayProps {
   error: Error;
-  componentStack?: string;
+  componentStack?: string | null;
   showDetails: boolean;
   boundaryName?: string;
   onReset?: () => void;

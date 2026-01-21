@@ -58,7 +58,7 @@ function parseInline(text: string): MarkdownNode[] {
     if (match) {
       nodes.push({
         type: 'bold',
-        children: parseInline(match[2]),
+        children: parseInline(match[2] ?? ''),
       });
       remaining = remaining.slice(match[0].length);
       continue;
@@ -69,7 +69,7 @@ function parseInline(text: string): MarkdownNode[] {
     if (match) {
       nodes.push({
         type: 'italic',
-        children: parseInline(match[2]),
+        children: parseInline(match[2] ?? ''),
       });
       remaining = remaining.slice(match[0].length);
       continue;
@@ -80,7 +80,7 @@ function parseInline(text: string): MarkdownNode[] {
     if (match) {
       nodes.push({
         type: 'code',
-        content: match[1],
+        content: match[1] ?? '',
       });
       remaining = remaining.slice(match[0].length);
       continue;
@@ -91,8 +91,8 @@ function parseInline(text: string): MarkdownNode[] {
     if (match) {
       nodes.push({
         type: 'link',
-        content: match[1],
-        url: match[2],
+        content: match[1] ?? '',
+        url: match[2] ?? '',
       });
       remaining = remaining.slice(match[0].length);
       continue;
@@ -124,8 +124,10 @@ export function parseMarkdown(text: string, options: ParseOptions = {}): Markdow
   const nodes: MarkdownNode[] = [];
   let i = 0;
 
+  const getLine = (idx: number): string => lines[idx] ?? '';
+
   while (i < lines.length) {
-    const line = lines[i];
+    const line = getLine(i);
 
     // Empty line
     if (line.trim() === '') {
@@ -138,8 +140,8 @@ export function parseMarkdown(text: string, options: ParseOptions = {}): Markdow
     if (headingMatch) {
       nodes.push({
         type: 'heading',
-        level: headingMatch[1].length,
-        children: parseInline(headingMatch[2]),
+        level: (headingMatch[1] ?? '').length,
+        children: parseInline(headingMatch[2] ?? ''),
       });
       i++;
       continue;
@@ -159,8 +161,8 @@ export function parseMarkdown(text: string, options: ParseOptions = {}): Markdow
       const codeLines: string[] = [];
       i++;
 
-      while (i < lines.length && !CODE_BLOCK_END.test(lines[i])) {
-        codeLines.push(lines[i]);
+      while (i < lines.length && !CODE_BLOCK_END.test(getLine(i))) {
+        codeLines.push(getLine(i));
         i++;
       }
 
@@ -176,15 +178,16 @@ export function parseMarkdown(text: string, options: ParseOptions = {}): Markdow
     // Blockquote
     const blockquoteMatch = line.match(BLOCKQUOTE_REGEX);
     if (blockquoteMatch) {
-      const quoteLines: string[] = [blockquoteMatch[1]];
+      const quoteLines: string[] = [blockquoteMatch[1] ?? ''];
       i++;
 
       while (i < lines.length) {
-        const nextMatch = lines[i].match(BLOCKQUOTE_REGEX);
+        const currentLine = getLine(i);
+        const nextMatch = currentLine.match(BLOCKQUOTE_REGEX);
         if (nextMatch) {
-          quoteLines.push(nextMatch[1]);
+          quoteLines.push(nextMatch[1] ?? '');
           i++;
-        } else if (lines[i].trim() === '') {
+        } else if (currentLine.trim() === '') {
           break;
         } else {
           break;
@@ -204,14 +207,15 @@ export function parseMarkdown(text: string, options: ParseOptions = {}): Markdow
       const items: MarkdownNode[] = [];
 
       while (i < lines.length) {
-        const itemMatch = lines[i].match(UNORDERED_LIST_REGEX);
+        const currentLine = getLine(i);
+        const itemMatch = currentLine.match(UNORDERED_LIST_REGEX);
         if (itemMatch) {
           items.push({
             type: 'listItem',
-            children: parseInline(itemMatch[1]),
+            children: parseInline(itemMatch[1] ?? ''),
           });
           i++;
-        } else if (lines[i].trim() === '') {
+        } else if (currentLine.trim() === '') {
           i++;
           break;
         } else {
@@ -233,14 +237,15 @@ export function parseMarkdown(text: string, options: ParseOptions = {}): Markdow
       const items: MarkdownNode[] = [];
 
       while (i < lines.length) {
-        const itemMatch = lines[i].match(ORDERED_LIST_REGEX);
+        const currentLine = getLine(i);
+        const itemMatch = currentLine.match(ORDERED_LIST_REGEX);
         if (itemMatch) {
           items.push({
             type: 'listItem',
-            children: parseInline(itemMatch[2]),
+            children: parseInline(itemMatch[2] ?? ''),
           });
           i++;
-        } else if (lines[i].trim() === '') {
+        } else if (currentLine.trim() === '') {
           i++;
           break;
         } else {
@@ -261,7 +266,7 @@ export function parseMarkdown(text: string, options: ParseOptions = {}): Markdow
     i++;
 
     while (i < lines.length) {
-      const nextLine = lines[i];
+      const nextLine = getLine(i);
       if (
         nextLine.trim() === '' ||
         HEADING_REGEX.test(nextLine) ||
