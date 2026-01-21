@@ -21,10 +21,16 @@ export function formatMessageContent(content: string, _maxWidth: number): string
  * Looks for common box-drawing characters and patterns.
  */
 export function isAsciiDiagram(content: string): boolean {
-  // Box-drawing characters
+  // Box-drawing characters (Unicode)
   const boxChars = /[─│┌┐└┘├┤┬┴┼╭╮╯╰═║╔╗╚╝╠╣╦╩╬]/;
-  // Common ASCII art patterns (includes arrows like -->, <--, etc.)
-  const asciiPatterns = /[+\-|][-+|]+|[<>v^][-=]+|[-=]+[<>v^]|-->|<--|->|<-|=>|<=|=>/;
+
+  // Common ASCII art patterns:
+  // - Box corners and edges: +--+ or |--|
+  // - Lines enclosed by |: | text |
+  // - Arrows: -->, <--, ->, <-, =>, <=
+  // - Long dashes or equals: --- or ===
+  // - Box row: +---+
+  const asciiPatterns = /[+\-|][-+|]+|^\s*\|.*\|\s*$|-->|<--|->|<-|=>|<=|---+|===+|\+[-=]+\+/;
 
   const lines = content.split('\n');
 
